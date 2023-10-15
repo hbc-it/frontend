@@ -17,3 +17,13 @@ jobs:
         run: |
           echo "Hi My First Runner Job"
           pwd
+      - name: Set up SSH
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.AWS_IP }} >> ~/.ssh/known_hosts
+
+      - name: SSH into EC2 and run command
+        run: |
+          ssh -i ~/.ssh/id_rsa ec2-user@${{ secrets.AWS_IP }}
+          echo "Hello HBC"
